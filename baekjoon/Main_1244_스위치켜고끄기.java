@@ -1,4 +1,4 @@
-package HW0801;
+package algorithm.baekjoon;
 
 import java.io.BufferedReader;
 import java.io.IOException;
