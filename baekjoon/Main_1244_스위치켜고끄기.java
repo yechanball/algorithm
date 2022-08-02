@@ -27,24 +27,20 @@ public class Main_1244_스위치켜고끄기 {
 			case 1:
 				cnt = 1;
 				while(num*cnt <= N) {
-					if(arr[num*cnt-1] == 0) arr[num*cnt-1] = 1;
-					else arr[num*cnt-1] = 0;
+					arr[num*cnt-1] = (arr[num*cnt-1] == 0 ? 1 : 0);
 					cnt++;
 				}
 				break;
 				
 			case 2:
+				num--;
 				cnt = 0;
-				do {
-					if(arr[num-1+cnt] == 0) {
-						arr[num-1+cnt] = 1;
-						arr[num-1-cnt] = 1;
-					}else {
-						arr[num-1+cnt] = 0;
-						arr[num-1-cnt] = 0;
-					}
+				while(arr[num+cnt] == arr[num-cnt]) {
+					arr[num+cnt] = (arr[num+cnt] == 0 ? 1 : 0); 
+					arr[num-cnt] = arr[num+cnt];
 					cnt++;
-				}while((num-1+cnt)<N && (num-1-cnt)>=0 && arr[num-1+cnt] == arr[num-1-cnt]);
+					if((num-cnt)<0 || (num+cnt)>=N) break;
+				}
 				break;
 
 			default:
