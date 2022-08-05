@@ -12,30 +12,28 @@ public class Main_2493_탑 {
 		StringBuilder sb = new StringBuilder();
 		int N = Integer.parseInt(in.readLine());
 		StringTokenizer st = new StringTokenizer(in.readLine(), " ");
-		Stack<Integer> tower = new Stack<>();
+		Stack<Integer> tower = new Stack<>(); // 탑 스택
 		for (int i = 0; i < N; i++) {
 			tower.push(Integer.parseInt(st.nextToken()));
 		}
-		Stack<Integer> contact = new Stack<>();
-		boolean isContact = false;
+		Stack<Integer> check = new Stack<>(); // 확인한 탑 스택
 		int nowTower;
-		while (!tower.empty()) {
-			isContact = false;
+		while (!tower.empty()) { // 탑 순차적 검사
 			nowTower = tower.pop();
-			
-			for (int j = tower.size()-1; j >= 0; j--) {
-				if(tower.elementAt(j) > nowTower) {
-					isContact = true;
-					contact.push(j+1);
+			if(tower.isEmpty()) sb.append(0).append(" "); // 수신 탑이 없을때
+			while(!tower.empty()) { // 수신 탑 찾기
+				if(tower.peek() > nowTower) {
+					sb.append(tower.size()).append(" ");
 					break;
+				}else {
+					check.push(tower.pop());
 				}
 			}
-			if(!isContact) contact.push(0);
+			while(!check.empty()) { // 검사한 탑 복원
+				tower.push(check.pop());
+			}
 		}
-		int size = contact.size();
-		for (int i = 0; i < size; i++) {
-			sb.append(contact.pop()).append(" ");
-		}
-		System.out.print(sb);
+		sb.append(0); // 마지막 탑은 수신 탑 X
+		System.out.print(sb.reverse());
 	}
 }
