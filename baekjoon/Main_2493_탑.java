@@ -3,7 +3,8 @@ package algorithm.baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main_2493_탑 {
@@ -12,28 +13,30 @@ public class Main_2493_탑 {
 		StringBuilder sb = new StringBuilder();
 		int N = Integer.parseInt(in.readLine());
 		StringTokenizer st = new StringTokenizer(in.readLine(), " ");
-		Stack<Integer> tower = new Stack<>(); // 탑 스택
-		for (int i = 0; i < N; i++) {
-			tower.push(Integer.parseInt(st.nextToken()));
-		}
-		Stack<Integer> check = new Stack<>(); // 확인한 탑 스택
-		int nowTower;
-		while (!tower.empty()) { // 탑 순차적 검사
-			nowTower = tower.pop();
-			if(tower.isEmpty()) sb.append(0).append(" "); // 수신 탑이 없을때
-			while(!tower.empty()) { // 수신 탑 찾기
-				if(tower.peek() > nowTower) {
-					sb.append(tower.size()).append(" ");
+		Deque<int[]> tower = new ArrayDeque<>(); // 탑 Deque
+		int[] nowTower, curTower;
+		
+		for (int i = 1; i <= N; i++) {
+			nowTower = new int[] {i, Integer.parseInt(st.nextToken())};
+			// 탑 순차적 검사
+			while (true) {
+				// 탑이 없으면 넣기
+				if(tower.isEmpty()) {
+					sb.append(0).append(" ");			
+					tower.push(nowTower);
+					break;
+				}
+				curTower = tower.peek();
+				// 수신 탑 찾기
+				if(curTower[1] > nowTower[1]) {
+					sb.append(curTower[0]).append(" ");
+					tower.push(nowTower);
 					break;
 				}else {
-					check.push(tower.pop());
+					tower.pop();
 				}
 			}
-			while(!check.empty()) { // 검사한 탑 복원
-				tower.push(check.pop());
-			}
 		}
-		sb.append(0); // 마지막 탑은 수신 탑 X
-		System.out.print(sb.reverse());
+		System.out.print(sb);
 	}
 }
