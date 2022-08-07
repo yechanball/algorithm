@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class Main_2023_신기한소수 {
 	public static boolean isPrime(int num, int N) {
-		for (int i = 2; i < num; i++) {
+		for (int i = 2; i <= (int)Math.sqrt(num); i++) {
 			if(num%i == 0) return false;
 		}
 		return true;
