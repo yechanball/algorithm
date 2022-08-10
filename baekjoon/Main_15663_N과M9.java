@@ -15,7 +15,7 @@ public class Main_15663_N과M9 {
 	static int[] result;
 	static boolean[] check;
 	
-	public static void permutationint(int cnt) { // 중복순열 구하기
+	public static void permutationint(int cnt) { // 순열 구하기
 		if(cnt == M) { // 더 이상 뽑을 것이 없을 때 재귀 종료
 			for (int num : result) {
 				sb.append(num).append(" ");				
