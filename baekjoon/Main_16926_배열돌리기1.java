@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main_16926_배열돌리기1 {
@@ -23,35 +25,23 @@ public class Main_16926_배열돌리기1 {
 				arr[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		int preTmp, nowTmp;
-		for (int r = 0; r < R; r++) {
-			for (int i = 0; i < Math.min(N, M)/2; i++) {
-				// 왼쪽 열 이동
-				nowTmp = arr[N-i-1][i]; // 좌하 모서리
-				for (int j = N-i-1; j > i; j--) {
-					arr[j][i] = arr[j-1][i];
-				}
-				preTmp = nowTmp;
-				// 하단 행 이동
-				nowTmp = arr[N-i-1][M-i-1]; // 우하 모서리
-				for (int j = M-i-1; j > i+1; j--) {
-					arr[N-i-1][j] = arr[N-i-1][j-1]; 
-				}
-				arr[N-i-1][i+1] = preTmp;
-				preTmp = nowTmp;
-				// 오른쪽 열 이동
-				nowTmp = arr[i][M-i-1]; // 우상 모서리
-				for (int j = i; j < N-i-1; j++) {
-					arr[j][M-i-1] = arr[j+1][M-i-1];
-				}
-				arr[N-i-2][M-i-1] = preTmp;
-				preTmp = nowTmp;
-				// 상단 행 이동
-				for (int j = i; j < M-i-1; j++) {
-					arr[i][j] = arr[i][j+1]; 
-				}
-				arr[i][M-i-2] = preTmp;	
+		Queue<Integer> queue = new ArrayDeque<>();
+		int range = Math.min(N, M)/2; 
+		for (int i = 0; i < range; i++) {
+			for (int j = i; j < M-i; j++) queue.offer(arr[i][j]);  // 상단 행 읽기
+			for (int j = i+1; j < N-i; j++) queue.offer(arr[j][M-i-1]); // 오른쪽 열 읽기
+			for (int j = M-i-2; j >= i; j--) queue.offer(arr[N-i-1][j]); // 하단 행 읽기
+			for (int j = N-i-2; j > i; j--) queue.offer(arr[j][i]); // 왼쪽 열 읽기
+			
+			int cycle = R%queue.size();
+			for (int r = 1; r <= cycle; r++) { // 회전 연산 반복, 한칸씩 밀기
+				queue.offer(queue.poll());
 			}
+			
+			for (int j = i; j < M-i; j++) arr[i][j] = queue.poll();  // 상단 행 입력
+			for (int j = i+1; j < N-i; j++) arr[j][M-i-1] = queue.poll(); // 오른쪽 열 입력
+			for (int j = M-i-2; j >= i; j--) arr[N-i-1][j] = queue.poll(); // 하단 행 입력
+			for (int j = N-i-2; j > i; j--) arr[j][i] = queue.poll(); // 왼쪽 열 입력			
 		}
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
