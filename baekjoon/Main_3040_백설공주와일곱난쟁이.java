@@ -11,7 +11,7 @@ public class Main_3040_백설공주와일곱난쟁이 {
 	static int[] miniMe = new int[9]; // 난쟁이 모자에 적힌 수 배열
 	static int[] realMiniMe = new int[7]; // 리얼 일곱 난쟁이
 	
-	public static void combi(int cnt, int start, int sum, int flag) {
+	public static void combi(int cnt, int start, int sum) {
 		if(cnt == 7) {
 			if(sum == 100) { // 일곱명 합이 100이면 출력후 종료
 				for (int i = 0; i < 7; i++) {
@@ -21,9 +21,8 @@ public class Main_3040_백설공주와일곱난쟁이 {
 			}
 		}else {
 			for (int i = start; i < 9; i++) {
-				if( (flag & 1<<i) != 0 ) continue; // 이미 마스킹되어 있으면 건너뛰기
 				realMiniMe[cnt] = miniMe[i];
-				combi(cnt+1, i+1, sum+miniMe[i], flag | 1<<i);
+				combi(cnt+1, i+1, sum+miniMe[i]);
 			}
 		}
 	}
@@ -34,7 +33,7 @@ public class Main_3040_백설공주와일곱난쟁이 {
 		for (int i = 0; i < 9; i++) {
 			miniMe[i] = Integer.parseInt(in.readLine());
 		}
-		combi(0, 0, 0, 0); // 일곱 난쟁이 찾기
+		combi(0, 0, 0); // 일곱 난쟁이 찾기
 		out.write(sb.toString());
 		out.flush();
 		out.close();
