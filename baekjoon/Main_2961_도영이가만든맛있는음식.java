@@ -12,15 +12,14 @@ public class Main_2961_도영이가만든맛있는음식 {
 	static int[][] taste; // 0: 신맛, 1: 쓴맛
 	static int minDiff = Integer.MAX_VALUE; // 신맛과 쓴맛의 차이 최솟값
 	
-	public static void combi(int cnt, int start, int sour, int bitter, int flag) {
+	public static void combi(int cnt, int start, int sour, int bitter) {
 		if(cnt == R) { // 전부 다 뽑은 경우
 			int diff = Math.abs(sour - bitter); // 신맛과 쓴맛 차이
 			if(diff < minDiff) minDiff = diff; // 최솟값 비교
 			return;
 		}else{
 			for (int i = start; i < N; i++) {
-				if( (flag & 1<<i) != 0 ) continue; // 이미 선택한 원소인 경우
-				combi(cnt+1, i+1, sour*taste[i][0], bitter+taste[i][1], flag | 1<<i); // 재귀 호출
+				combi(cnt+1, i+1, sour*taste[i][0], bitter+taste[i][1]); // 재귀 호출
 			}
 		}
 	}
@@ -40,7 +39,7 @@ public class Main_2961_도영이가만든맛있는음식 {
 		// 조합 생성
 		for (int r = 1; r <= N; r++) { // N개중 1개에서 N개 뽑는 경우까지 찾기
 			R = r; // 뽑을 개수
-			combi(0, 0, 1, 0, 0);
+			combi(0, 0, 1, 0);
 		}
 		out.write(Integer.toString(minDiff));
 		out.flush();
