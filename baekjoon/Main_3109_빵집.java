@@ -35,6 +35,8 @@ public class Main_3109_빵집 {
 			}
 		}
 		
+		copyVisit(visited, checkVisited);
+		
 		setPipeline(0, 0, map, visited); // 파이프라인 찾기
 		
 		out.write(Integer.toString(maxPipeline));
@@ -55,8 +57,8 @@ public class Main_3109_빵집 {
 				nowLine = 0;
 				findLine(0, start, C-1, visited); // 가스관까지 라인 탐색
 				copyVisit(checkVisited, visited); // 탐색한 배열 결과 복사
-				System.out.println("---"+i+"에서 출발! -> 개수: "+(pipeline+nowLine));
-				printVisit(visited);
+//				System.out.println("---"+i+"에서 출발! -> 개수: "+(pipeline+nowLine));
+//				printVisit(visited);
 				setPipeline(i+1, pipeline + nowLine, map, visited); // 다음 파이프라인 탐색 -> 재귀 호출
 				copyVisit(originVisited, visited); // 방문 배열 초기화
 			}
@@ -94,14 +96,14 @@ public class Main_3109_빵집 {
 		}
 	}
 	
-	public static void printVisit(boolean[][] visited) { // 방문 배열 복사 메서드
-		System.out.println("------------------");
-		for (int i = 0; i < R; i++) {
-			for (int j = 0; j < C; j++) {
-				int n = (visited[i][j]) ? 1 : 0;
-				System.out.print(n);
-			}
-			System.out.println();
-		}
-	}
+//	public static void printVisit(boolean[][] visited) { // 방문 배열 출력 메서드
+//		System.out.println("------------------");
+//		for (int i = 0; i < R; i++) {
+//			for (int j = 0; j < C; j++) {
+//				int n = (visited[i][j]) ? 1 : 0;
+//				System.out.print(n);
+//			}
+//			System.out.println();
+//		}
+//	}
 }
