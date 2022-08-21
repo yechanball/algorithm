@@ -14,19 +14,16 @@ public class Main_13241_최소공배수 {
 		StringTokenizer st = new StringTokenizer(in.readLine(), " ");
 		long A = Long.parseLong(st.nextToken());
 		long B = Long.parseLong(st.nextToken());
-		long gcd = 1;
-		long lcm = 0;
-		
-		for (int i = (int)((A>B)?B:A); i >= 1; i--) {
-			if(A%i == 0 && B%i == 0) { // 최대 공약수 찾기
-				gcd = i;
-				break;
-			}
-		}
-		lcm = A * B / gcd; // 최소공배수 = 두 수의 곱 / 최대공약수
-		
+		long lcm = A * B / ((A > B) ? gcd(A, B) : gcd(B, A)); // 최소공배수 = 두 수의 곱 / 최대공약수
 		out.write(Long.toString(lcm));
 		out.flush();
 		out.close();
+	}
+	
+	public static long gcd(long a, long b) { // 유클리드 호제법으로 최대공약수 계산
+		if(a%b == 0)
+			return b;
+		else
+			return gcd(b, a%b);
 	}
 }
