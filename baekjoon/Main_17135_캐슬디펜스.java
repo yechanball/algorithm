@@ -5,15 +5,32 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main_17135_캐슬디펜스 {
 	static int N, M, D; // 행과 열 크기, 궁수의 공격 거리 제한
 	static int[][] originMap; // 첫 입력 받은 위치
+	static List<Enemy> enemyList = new ArrayList<Enemy>(); // 적 위치 정보 리스트
 	static int[] archPosition; // 궁수
 	static int maxKill = 0; // 궁수의 공격으로 제거할 수 있는 적의 최대 수
 	
+	public static class Enemy {
+		int r; // 행
+		int c; // 열
+		int d; // 궁수 거리
+		
+		public Enemy(int r, int c, int d) {
+			super();
+			this.r = r;
+			this.c = c;
+			this.d = d;
+		}
+	}
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -29,6 +46,9 @@ public class Main_17135_캐슬디펜스 {
 			st = new StringTokenizer(in.readLine(), " ");
 			for (int j = 0; j < M; j++) {
 				originMap[i][j] = Integer.parseInt(st.nextToken());
+				if (originMap[i][j] == 1) { // 적인 경우
+					enemyList.add(new Enemy(i, j, -1));	// 궁수 거리는 초기에 -1로 초기화				
+				}
 			}
 		}
 		// 궁수 배치 생성 -> 게임 시작 -> 적 제거 수 계산 -> 최댓값 찾기
@@ -53,12 +73,21 @@ public class Main_17135_캐슬디펜스 {
 	}
 	
 	public static void startGame() {
-		// 원래 맵을 게임에서 사용할 앱으로 복사
+		// 원래 맵을 게임에서 사용할 맵으로 복사
+		int[][] map = new int[N][M];
+		mapCopyTo(map);
 		
-		// new map
-		// kill
-		// while 반복으로 적들이 전부 없어질때까지 반복
-		// 반복문 안 순서 : 궁수 공격 -> 탈출조건 체크 -> 적 이동 -> 탈출조건 체크
+		int turn = 0; // 턴수
+		Deque<Enemy> q = new ArrayDeque<Enemy>(); // 적들의 정보를 저장할 큐
+		
+		while(!q.isEmpty()) { // 모든 적이 사라질때까지 반복
+			turn++; // 턴수 하나 늘리기
+			
+			// kill
+			// while 반복으로 적들이 전부 없어질때까지 반복
+			// 반복문 안 순서 : 궁수 공격 -> 탈출조건 체크 -> 적 이동 -> 탈출조건 체크
+			
+		}		
 		
 		// 반복 종료되면 kill과 maxkill 비교
 		
