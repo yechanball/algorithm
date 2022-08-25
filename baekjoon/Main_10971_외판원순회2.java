@@ -47,8 +47,10 @@ public class Main_10971_외판원순회2 {
 			return;
 		}
 		
+		if(sumMoney >= minMoney) return;
+		
 		for (int i = 0; i < N; i++) {
-			if(money[city][i] != 0 && !visited[i]) { // start -> i로 가는 길이 있고, i 도시를 방문하지 않은 경우
+			if(money[city][i] != 0 && !visited[i]) { // city -> i로 가는 길이 있고, i 도시를 방문하지 않은 경우
 				visited[i] = true;
 				travelCity(i, sumMoney + money[city][i], visitCnt+1);
 				visited[i] = false;
