@@ -5,8 +5,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main_18917_수열과쿼리38 {
@@ -16,8 +14,6 @@ public class Main_18917_수열과쿼리38 {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		List<Integer> list = new ArrayList<Integer>();
-		list.add(0);
 		int N = Integer.parseInt(in.readLine()); // 쿼리의 수
 		long sum = 0; // 모든 원소 총합
 		long xor = 0; // 모든 원소를 XOR한 값		
@@ -29,7 +25,6 @@ public class Main_18917_수열과쿼리38 {
 				st = new StringTokenizer(input, " ");
 				st.nextToken();
 				x = Integer.parseInt(st.nextToken());
-				list.add(x);
 				sum += x;
 				xor ^= x;
 				break;
@@ -37,7 +32,6 @@ public class Main_18917_수열과쿼리38 {
 				st = new StringTokenizer(input, " ");
 				st.nextToken();
 				x = Integer.parseInt(st.nextToken());
-				list.remove((Integer)x);
 				sum -= x;
 				xor ^= x;
 				break;
