@@ -14,26 +14,28 @@ public class Main_5525_IOIOI {
 		int M = Integer.parseInt(in.readLine());
 
 		String input = in.readLine();
-		int idx = 0, cnt = 0;
-		boolean isIOI;
+		int idx = 0, cnt = 0, len = 0;
 		while(idx < M) {
 			if(input.charAt(idx) == 'I') { // I인 경우
-				 isIOI = true;
-				 if(idx+N*2 > M) break; // 범위를 넘어가는 경우 반복 종료 
-				 for (int i = 1; i <= N*2; i++) {
-					 if(i%2 == 0) { // 짝수번째
-						 if(input.charAt(idx+i) == 'I') continue;
-						 isIOI = false;
-						 break;
-					 }else { // 홀수번째
-						 if(input.charAt(idx+i) == 'O') continue;
-						 isIOI = false;
-						 break;
-					 }
-				 }
-				 if(isIOI) cnt++;					 
+				if(idx+1 >= M || idx+2 >= M ) {
+					if(len >= N) {
+						cnt += (len-N+1);
+					}
+					break;
+				}
+				if(input.charAt(idx+1) == 'O' && input.charAt(idx+2) == 'I') {
+					len++;
+					idx += 2;
+				}else {
+					idx += 1;
+					if(len >= N) {
+						cnt += (len-N+1);
+					}
+					len = 0;
+				}
+			}else {
+				idx++;				
 			}
-			idx++;
 		}
 		out.write(Integer.toString(cnt));
 		out.flush();
