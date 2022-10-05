@@ -59,21 +59,7 @@ public class Main_17143_낚시왕 {
 			}
 		}
 		
-		System.out.println("---cnt : "+ cnt+"번째 변경 전-----");
-		for (int i = 1; i <= R; i++) {
-			for (int j = 1; j <= C; j++) {
-				System.out.print(board[i][j] + " ");
-			}
-			System.out.println("");
-		}
 		moveShark(); // 상어 이동	
-		System.out.println("--- 변경 후-----");
-		for (int i = 1; i <= R; i++) {
-			for (int j = 1; j <= C; j++) {
-				System.out.print(board[i][j] + " ");
-			}
-			System.out.println("");
-		}
 		goFish(cnt+1); // 재귀 호출
 	}
 
@@ -99,77 +85,25 @@ public class Main_17143_낚시왕 {
 			
 			board[row][col] = 0; // 격자판에서 상어 지우기
 			
-			if(direction == 1) {
-				if(row > speed) {
-					row -= speed;
-				}else if(((speed-row+1)/(R-1))%2 == 0) {
-					row = (speed-row+1)%(R-1) + 1;
-					direction = 2;
-				}else {
-					row = R - ((speed-row+1)%(R-1));
-				}
-			}else if(direction == 2) {
-				if(R-row > speed) {
-					row += speed;
-				}else if(((speed-R+row)/(R-1))%2 == 0) {
-					row = R - (speed-R+row)%(R-1);
-					direction = 1;
-				}else {
-					row = ((speed-row+1)%(R-1));
-				}
-			}else if(direction == 3) {
-				if(C-col > speed) {
-					col += speed;
-				}else if(((speed-C+col)/(C-1))%2 == 0) {
-					if(((speed-C+col)%(C-1)) == 0) {
-						col = C;						
-					}else {
-						col = (speed-C+col)%(C-1) + 1;						
-					}
-					direction = 4;
-				}else {
-					if(((speed-col+1)%(C-1)) == 0) {
-						col = C-1;
-						direction = 4;
-					}else {
-						col = C - ((speed-col+1)%(C-1)) + 1;						
-					}
-				}
-			}else if(direction == 4) {
-				if(col > speed) {
-					col -= speed;
-				}else if(((speed-col+1)/(C-1))%2 == 0) {
-					if(((speed-col+1)%(C-1)) == 0) {
-						col = C;
-					}else {
-						col = (speed-col+1)%(C-1) + 1;						
-					}
-					direction = 3;
-				}else {
-					if(((speed-col+1)%(C-1)) == 0) {
-						col = C-1;
-						direction = 3;
-					}else {
-						col = C - ((speed-col+1)%(C-1)) + 1;						
-					}
-				}
+			while(speed > (C-1)*2) {
+				speed -= (C-1)*2;
 			}
 			
-//			for (int j = 0; j < speed; j++) {
-//				int nr = row + dr[direction];
-//				int nc = col + dc[direction];
-//				
-//				if(nr <= 0 || nr > R || nc <= 0 || nc > C) { // 격자판 넘는 경우 방향 바꾸기
-//					if(direction >= 3) {
-//						direction = (direction == 3) ? 4 : 3;
-//					}else {
-//						direction = (direction == 1) ? 2 : 1;						
-//					}
-//				}
-//				
-//				row += dr[direction];
-//				col += dc[direction];
-//			}
+			for (int j = 0; j < speed ; j++) {
+				int nr = row + dr[direction];
+				int nc = col + dc[direction];
+				
+				if(nr <= 0 || nr > R || nc <= 0 || nc > C) { // 격자판 넘는 경우 방향 바꾸기
+					if(direction >= 3) {
+						direction = (direction == 3) ? 4 : 3;
+					}else {
+						direction = (direction == 1) ? 2 : 1;						
+					}
+				}
+				
+				row += dr[direction];
+				col += dc[direction];
+			}
 			
 			shark[1] = row;
 			shark[2] = col;
