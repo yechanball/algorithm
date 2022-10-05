@@ -5,20 +5,32 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
+class Shark {
+	int r; // 행
+	int c; // 열
+	int s; // 속도
+	int d; // 방향
+	int z; // 크기
+	
+	public Shark(int r, int c, int s, int d, int z) {
+		this.r = r;
+		this.c = c;
+		this.s = s;
+		this.d = d;
+		this.z = z;
+	}
+}
 public class Main_17143_낚시왕 {
 	static int R, C, M; // R:행, C:열, M:상어의 수
 	static int sharkSum = 0; // 잡은 상어의 크기 합
-	static int[][] board; // 주어진 격자판 -> 낚시왕:-1, 상어:번호, 빈칸:0
-	static List<int[]> sharks = new ArrayList<int[]>(); // num(상어번호), r(행), c(열), s(속력), d(방향), z(크기)
-	static List<int[]> tmpSharks = new ArrayList<int[]>();
+	static Shark[][] board; // 주어진 격자판
 	static int[] dr = new int[] {0, -1, 1, 0, 0}; // 1:상, 2:하, 3:우, 4:좌
 	static int[] dc = new int[] {0, 0, 0, 1, -1};
+	
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -29,14 +41,17 @@ public class Main_17143_낚시왕 {
 		C = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
-		board = new int[R+1][C+1];
+		board = new Shark[R+1][C+1];
 		for (int i = 1; i <= M; i++) {
 			st = new StringTokenizer(in.readLine(), " ");
-			sharks.add(new int[] {i, Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())});
-			board[sharks.get(i-1)[1]][sharks.get(i-1)[2]] = sharks.get(i-1)[0];
+			int row = Integer.parseInt(st.nextToken());
+			int col = Integer.parseInt(st.nextToken());
+			int speed = Integer.parseInt(st.nextToken());
+			int direction = Integer.parseInt(st.nextToken());
+			int size = Integer.parseInt(st.nextToken());
+			board[row][col] = new Shark(row, col, speed, direction, size);
 		}
-		
-		board[0][0] = -1;
+
 		goFish(1);
 		
 		out.write(Integer.toString(sharkSum));
@@ -48,47 +63,62 @@ public class Main_17143_낚시왕 {
 		if(cnt == C+1) { // 낚시왕이 끝까지 이동한 경우
 			return; // 종료
 		}
-		
-		board[0][cnt] = -1;
-		
+
 		for (int i = 1; i <= R; i++) { // 낚시왕이 있는 열에서 가장 가까운 상어 잡기
-			if(board[i][cnt] != 0) {
-				removeShark(board[i][cnt]);
-				board[i][cnt] = 0;
+			if(board[i][cnt] != null) {
+				sharkSum += board[i][cnt].z;
+				board[i][cnt] = null;
 				break;
 			}
 		}
 		
-		moveShark(); // 상어 이동	
+		moveShark(); // 상어 이동
+		
 		goFish(cnt+1); // 재귀 호출
 	}
-
-	private static void removeShark(int sharkNum) { // 상어 제거
-		for (int i = 0, size = sharks.size(); i < size; i++) {
-			if(sharks.get(i)[0] == sharkNum) {  
-				sharkSum += sharks.get(i)[5]; // 상어 크기 더하기
-				sharks.remove(i); // 상어 목록에서 상어 번호 찾아서 삭제
-				break;
+	
+	private static void moveShark() { 
+		Deque<Shark> q = new ArrayDeque<Shark>();
+		
+		for (int i = 1; i <= R; i++) {
+			for (int j = 1; j <= C; j++) {
+				if(board[i][j] != null) { // 상어가 있는 경우
+					q.offer(board[i][j]);
+					board[i][j] = null; // 격자판에서 상어 지우기					
+				}
 			}
 		}
-	}
-	
-	private static void moveShark() { // 상어 이동
-		tmpSharks.removeAll(tmpSharks);
 		
-		for (int i = 0, len = sharks.size(); i < len; i++) {
-			int[] shark = sharks.get(i);
-			int row = shark[1];
-			int col = shark[2];
-			int speed = shark[3];
-			int direction = shark[4];
+		while(!q.isEmpty()) {
+			Shark shark = q.poll();
+			int row = shark.r;
+			int col = shark.c;
+			int speed = shark.s;
+			int direction = shark.d;
 			
-			board[row][col] = 0; // 격자판에서 상어 지우기
-			
-			while(speed > (C-1)*2) {
-				speed -= (C-1)*2;
+			// 각 방향에 맞추어 왕복인 경우 스피드 줄이기
+			if(direction == 1 && direction == 2) {
+				speed %= (R-1)*2;				
+			}
+			if(direction == 3 && direction == 4) {
+				speed %= (C-1)*2;				
 			}
 			
+			// 끝에 있는 경우 방향 고려하기
+			if(direction == 1 && row == R) {
+				direction = 2;
+			}
+			if(direction == 2 && row == 1) {
+				direction = 1;
+			}
+			if(direction == 3 && col == 1) {
+				direction = 4;
+			}
+			if(direction == 4 && col == C) {
+				direction = 3;
+			}
+			
+			// 상어 이동
 			for (int j = 0; j < speed ; j++) {
 				int nr = row + dr[direction];
 				int nc = col + dc[direction];
@@ -105,66 +135,17 @@ public class Main_17143_낚시왕 {
 				col += dc[direction];
 			}
 			
-			shark[1] = row;
-			shark[2] = col;
-			shark[4] = direction;
+			shark.r = row;
+			shark.c = col;
+			shark.d = direction;
 			
-			tmpSharks.add(shark);
-		}
-		
-		sharks.removeAll(sharks);
-		if(tmpSharks.size() > 1) {
-			Collections.sort(tmpSharks, new Comparator<int[]>() { // 행, 행이 같다면 열로 정렬
-				@Override
-				public int compare(int[] s1, int[] s2) {
-					return (s1[1] == s2[1]) ? s1[2] - s2[2] : s1[1] - s2[1];
+			if(board[row][col] == null) { // 비어있는 칸인 경우
+				board[row][col] = shark;
+			}else { // 이미 상어가 존재하는 경우
+				if(shark.z > board[row][col].z) { // 새로운 상어가 기존 상어보다 큰 경우 -> 갱신
+					board[row][col] = shark;
 				}
-			});
-			
-			int preNum = 0;
-			int[] preShark = tmpSharks.get(preNum);
-			int idx = 0;
-			boolean isExist = false;
-			sharks.add(preShark);
-			
-			for (int i = 1, len = tmpSharks.size(); i < len; i++) {
-				int nowNum = i;
-				int[] nowShark = tmpSharks.get(nowNum);
-				isExist = false;
-				
-				if(preShark[1] == nowShark[1] && preShark[2] == nowShark[2]) { // 위치가 같다면
-					if(preShark[5] > nowShark[5]) { // 사이즈가 작은 상어 삭제
-						for (int j = 0; j <= idx; j++) {
-							if(sharks.get(j)[0] == preShark[0]) {
-								isExist = true;
-								break;
-							}
-						}
-						if(!isExist) {
-							sharks.add(preShark);
-							idx++;
-						}
-					}else {
-						sharks.remove(idx);
-						sharks.add(nowShark);
-						preNum = nowNum;
-						preShark = tmpSharks.get(preNum);
-					}
-				}else {
-					sharks.add(nowShark);
-					idx++;
-					preNum = nowNum;
-					preShark = tmpSharks.get(preNum);
-				}
-			}			
-		}else {
-			for (int[] shark : tmpSharks) {
-				sharks.add(shark);
 			}
-		}
-		
-		for (int[] shark : sharks) {
-			board[shark[1]][shark[2]] = shark[0];
 		}
 	}
 }
