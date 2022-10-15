@@ -8,8 +8,6 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Solution_3238_이항계수구하기 {
-	static int P; 
-	
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
