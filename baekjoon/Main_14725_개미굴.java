@@ -20,14 +20,12 @@ public class Main_14725_개미굴 {
 	static class Trie { // 트라이 클래스
 		Node root = new Node(); // 루트 노드 생성
 		
-		void insert(String str) { // 문자열 삽입
+		void insert(String input) { // 문자열 삽입
 			Node node = this.root;
-			
-			StringTokenizer st = new StringTokenizer(str, " ");
+			StringTokenizer st = new StringTokenizer(input, " ");
 			int K = Integer.parseInt(st.nextToken());
 			for (int i = 0; i < K; i++) {
-				String word = st.nextToken();
-				node = node.childNode.computeIfAbsent(word, key -> new Node());
+				node = node.childNode.computeIfAbsent(st.nextToken(), key -> new Node());
 			}
 		}
 	}
@@ -42,10 +40,7 @@ public class Main_14725_개미굴 {
 			trie.insert(in.readLine());
 		}
 		
-		for (Map.Entry<String, Node> next : trie.root.childNode.entrySet()) {
-			sb.append(next.getKey()).append("\n");
-			dfs(next.getValue(), 1);
-		}
+		dfs(trie.root, 0);
 		
 		out.write(sb.toString());
 		out.flush();
@@ -61,7 +56,9 @@ public class Main_14725_개미굴 {
 				sb.append("--");
 			}
 			sb.append(next).append("\n");
-			dfs(node.childNode.get(next), depth+1);
+			if (node.childNode.get(next) != null) {
+				dfs(node.childNode.get(next), depth+1);				
+			}
 		}
 	}
 }
