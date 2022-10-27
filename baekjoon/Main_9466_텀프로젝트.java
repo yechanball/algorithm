@@ -11,7 +11,6 @@ public class Main_9466_텀프로젝트 {
 	static int[] student;
 	static boolean[] team;
 	static boolean[] visited;
-	static boolean isTeam;
 	static int notTeam;
 	
 	public static void main(String[] args) throws IOException {
@@ -38,9 +37,8 @@ public class Main_9466_텀프로젝트 {
 			
 			visited = new boolean[N+1];
 			for (int i = 1; i <= N; i++) {
-				if(team[i]) continue; // 이미 팀으로 선택된 경우 탐색 X				
-				isTeam = false;
-				dfs(i, i);
+				if(team[i]) continue; // 이미 팀으로 설정된 경우 탐색 X	
+				dfs(i);
 			}
 			sb.append(notTeam).append("\n");
 		}
@@ -49,28 +47,20 @@ public class Main_9466_텀프로젝트 {
 		out.close();
 	}
 	
-	public static void dfs(int start, int now) {
-		if (team[now]) { // 이미 팀으로 선택된 학생을 탐색하는 경우 종료
-			isTeam = false;
-			return;
+	public static void dfs(int now) {
+		if (visited[now]) { // 이미 방문한 경우
+			team[now] = true; // 팀 설정
+			notTeam--;
+		}else {
+			visited[now] = true;	
 		}
-		else {
-			visited[now] = true;
-			int next = student[now];
-			
-			if(next == start) { // 번호를 따라 연결했을때 자기 자신으로 돌아오는 경우 -> true 반환
-				isTeam = true;
-				team[now] = true;
-				notTeam--;
-				return;
-			}else {
-				dfs(start, next);			
-			}
-			
-			if(isTeam) { // 팀으로 만들 수 있다면 팀 선택
-				team[now] = true;
-				notTeam--;
-			}			
+		
+		int next = student[now];
+		if(!team[next]) { // 다음이 아직 팀이 설정되지 않은 경우 탐색
+			dfs(next);
 		}
+			
+		visited[now] = false; // 방문 체크 해제
+		team[now] = true;
 	}
 }
