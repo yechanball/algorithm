@@ -1,4 +1,3 @@
-/* 채점 틀림 */
 package algorithm.baekjoon;
 
 import java.io.BufferedReader;
@@ -11,6 +10,7 @@ public class Main_12100_2048Easy {
 	static int N; // 보드 크기
 	static int maxBlock = 0; // 최대 블록
 	static int[][] board; // 보드
+	static int[] order = new int[10];
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -24,7 +24,7 @@ public class Main_12100_2048Easy {
 				board[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		
+
 		play(0); // 게임 실행
 		
 		System.out.print(maxBlock);
@@ -38,7 +38,7 @@ public class Main_12100_2048Easy {
 						maxBlock = board[i][j];
 					}
 				}
-			}
+			}		
 			return;
 		}
 		
@@ -50,10 +50,12 @@ public class Main_12100_2048Easy {
 		for (int i = 0; i < 4; i++) { // 4가지 방향 체크
 			move(i); // 이동
 			
+			order[cnt] = i; 
+			
 			play(cnt+1); // 다음 회차 실행
 			
 			for (int j = 0; j < N; j++) { // 보드 복구
-				tmp[j] = Arrays.copyOf(board[j], N);
+				board[j] = Arrays.copyOf(tmp[j], N);
 			}
 		}
 		
