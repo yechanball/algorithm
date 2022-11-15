@@ -12,29 +12,25 @@ public class Main_15565_귀여운라이언 {
 		
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
-		int[] dolls = new int[N];
-		int start = -1, end = 0, ryanCnt = 0;
-		int minSize = Integer.MAX_VALUE;
+		int[] ryans = new int[N];
+		int ryanCnt = 0;
 		
 		st = new StringTokenizer(in.readLine(), " ");
 		for (int i = 0; i < N; i++) {
-			dolls[i] = Integer.parseInt(st.nextToken());
-			if(dolls[i] == 2) continue;
-			
-			if(start == -1) start = i;
-			end = i;
-			if(++ryanCnt == K) {
-				minSize = Math.min(end-start+1, minSize);
-				for (int j = start+1; j <= end; j++) {
-					if(dolls[j] == 1) {
-						start = j;
-						ryanCnt--;
-						break;
-					}
-				}
-			}
+			int doll = Integer.parseInt(st.nextToken());
+			if(doll == 2) continue;
+			ryans[ryanCnt++] = i;
 		}
 		
-		System.out.print((minSize == Integer.MAX_VALUE) ? -1 : minSize);	
+		if(ryanCnt < K) {
+			System.out.print(-1);
+		}else {
+			int start = 0, end = K-1;
+			int minSize = ryans[end] - ryans[start] + 1;
+			for (int i = K; i < ryanCnt; i++) {
+				minSize = Math.min(ryans[++end] - ryans[++start] + 1, minSize);
+			}
+			System.out.print(minSize);
+		}
 	}
 }
