@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 public class Main_8394_악수 {
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(in.readLine());
+		int n = Integer.parseInt(in.readLine()) % 60; // 60번마다 주기가 반복
 		int[] dp = new int[n+1];
 		dp[0] = 1;
 		dp[1] = 1;
