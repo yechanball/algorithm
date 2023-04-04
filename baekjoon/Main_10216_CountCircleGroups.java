@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
@@ -20,7 +21,7 @@ public class Main_10216_CountCircleGroups {
 		}
 	}
 	
-	static boolean[][] link;
+	static ArrayList<Integer>[] adjList;
 	static boolean[] visited;
 	
 	public static void main(String[] args) throws IOException {
@@ -38,12 +39,16 @@ public class Main_10216_CountCircleGroups {
 				areaList[i] = new Area(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 			}
 			
-			link = new boolean[N+1][N+1];
+			adjList = new ArrayList[N+1];
+			for (int i = 1; i <= N; i++) {
+				adjList[i] = new ArrayList<Integer>();
+			}
+			
 			for (int i = 1; i <= N; i++) {
 				for (int j = i+1; j <= N; j++) {
 					if(dist(areaList[i], areaList[j]) <= (areaList[i].r + areaList[j].r) * (areaList[i].r + areaList[j].r)) {
-						link[i][j] = true;
-						link[j][i] = true;						
+						adjList[i].add(j);
+						adjList[j].add(i);				
 					}
 				}
 			}
@@ -53,7 +58,7 @@ public class Main_10216_CountCircleGroups {
 			for (int i = 1; i <= N; i++) {
 				if(visited[i]) continue;
 				
-				bfs(N, i);
+				bfs(i);
 				groupCnt++;
 			}
 	
@@ -68,7 +73,7 @@ public class Main_10216_CountCircleGroups {
 		return (a2.x - a1.x) * (a2.x - a1.x) + (a2.y - a1.y) * (a2.y - a1.y);
 	}
 	
-	public static void bfs(int N, int start) {
+	public static void bfs(int start) {
 		Deque<Integer> q = new ArrayDeque<Integer>();
 		
 		q.offer(start);
@@ -77,10 +82,10 @@ public class Main_10216_CountCircleGroups {
 		while(!q.isEmpty()) {
 			int curr = q.poll();
 			
-			for (int i = 1; i <= N; i++) {
-				if(link[curr][i] && !visited[i]) {
-					q.offer(i);
-					visited[i] = true;
+			for (int next : adjList[curr]) {
+				if(!visited[next]) {
+					q.offer(next);
+					visited[next] = true;
 				}
 			}
 		}
