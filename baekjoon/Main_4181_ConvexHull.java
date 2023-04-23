@@ -6,23 +6,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main_4181_ConvexHull {
 	static class Point {
-		int x;
-		int y;
+		long x;
+		long y;
 		
-		public Point(int x, int y) {
+		public Point(long x, long y) {
 			this.x = x;
 			this.y = y;
 		}
 	}
-	
-	static Point base = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -30,88 +30,62 @@ public class Main_4181_ConvexHull {
 		StringBuilder sb = new StringBuilder();
 		
 		int N = Integer.parseInt(in.readLine());
-		int cnt = 0; // 볼록껍질을 이루는 점의 개수
+		int cnt = 0;
 		
 		List<Point> pointList = new ArrayList<Point>();
 		for (int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(in.readLine());
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			String c = st.nextToken();
+			long x = Long.parseLong(st.nextToken());
+			long y = Long.parseLong(st.nextToken());
 			
-			if(c.equals("Y")) {
+			if(st.nextToken().equals("Y")) {
 				Point point = new Point(x, y);
 				pointList.add(point);
 				cnt++;
-				
-				// x좌표가 가장 작은 점(x좌표가 같은 경우 y좌표가 가장 작은 점)을 기준점으로 선정
-				if(x < base.x) base = point;
-				else if(x == base.x && y < base.y) base = point;	
 			}
 		}
-		sb.append(cnt + "\n");
+		sb.append(cnt);
 		
-		// 볼록껍질을 이루는 점을 기준점 기준으로 반시계 방향으로 정렬하기
 		Collections.sort(pointList, new Comparator<Point>() {
 			@Override
 			public int compare(Point p1, Point p2) {
-				long value = ccw(base, p1, p2);
-				
-				if(value > 0) return -1;
-				else if(value < 0) return 1;
-				else{
-					long dist1 = dist(base, p1);
-					long dist2 = dist(base, p2);
-					
-					return (dist1 > dist2) ? 1 : -1;
-				}
+				return (p1.x == p2.x) ? Long.compare(p1.y, p2.y) : Long.compare(p1.x, p2.x);
 			}
 		});
 		
-		int half = 0;
-		long maxDist = 0;
-		for (int i = 0; i < cnt; i++) {
-			Point point = pointList.get(i);
-			long d = dist(base, point);
-			if(d < maxDist) {
-				half = i;
-				break;
-			}
-			maxDist = d;
-			sb.append(point.x + " " + point.y + "\n");
-		}
-		
-		// 껍질 상단부분 재정렬
-		pointList = pointList.subList(half, cnt);
-		Collections.sort(pointList, new Comparator<Point>() {
+		Point[] points = pointList.toArray(new Point[cnt]);
+		Arrays.sort(points, 1, cnt, new Comparator<Point>() {
 			@Override
 			public int compare(Point p1, Point p2) {
-				long value = ccw(base, p1, p2);
-				
-				if(value > 0) return -1;
-				else if(value < 0) return 1;
-				else{
-					long dist1 = dist(base, p1);
-					long dist2 = dist(base, p2);
-					
-					return (dist1 < dist2) ? 1 : -1;
-				}
+				long ccwValue = ccw(points[0], p1, p2);
+			    
+			    if (ccwValue > 0) return -1;
+			    else if (ccwValue < 0) return 1;
+			    else if (p1.x != p2.x) return Long.compare(p1.x, p2.x);
+			    else return Long.compare(p1.y, p2.y);
 			}
 		});
-		for (Point point : pointList) {
-			sb.append(point.x + " " + point.y + "\n");
-		}
 		
+		Stack<Point> ans = new Stack<>();
+		Stack<Point> rev = new Stack<>();
+		
+        for (int i = 0; i < cnt; i++) {
+            while (ans.size() > 1 && (ccw(ans.get(ans.size() - 2), ans.peek(), points[i]) < 0)) { 
+                rev.push(ans.peek());
+                ans.pop();
+            }
+            ans.push(points[i]);
+        }
+        while(!rev.isEmpty()) ans.push(rev.pop());
+ 
+		for (Point point : ans) sb.append("\n" + point.x + " " + point.y);
+
 		out.write(sb.toString());
 		out.flush();
 		out.close();
 	}
 	
-	static long ccw(Point p1, Point p2, Point p3) { // Counter-Clockwise, 양수: 반시계방향 / 음수: 시계방향
+	static long ccw(Point p1, Point p2, Point p3) {
 		return (p1.x * p2.y + p2.x * p3.y + p3.x * p1.y) - (p2.x * p1.y + p3.x * p2.y + p1.x * p3.y);
-	}
-	
-	static long dist(Point p1, Point p2) {
-		return (p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y);
 	}
 }
