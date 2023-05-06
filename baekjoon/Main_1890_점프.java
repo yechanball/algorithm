@@ -15,7 +15,7 @@ public class Main_1890_점프 {
 			StringTokenizer st = new StringTokenizer(in.readLine());
 			for (int j = 0; j < N; j++) {
 				int dist = Integer.parseInt(st.nextToken());
-				if(dist > 0) {
+				if(board[i][j] > 0 && dist > 0) {
 					if(i+dist < N) board[i+dist][j] += board[i][j];
 					if(j+dist < N) board[i][j+dist] += board[i][j];
 				}
