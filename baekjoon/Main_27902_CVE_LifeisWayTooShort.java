@@ -14,12 +14,10 @@ public class Main_27902_CVE_LifeisWayTooShort {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
 		int n = Integer.parseInt(in.readLine());
-		
-		BigInteger answer = pow(n);
-		String ans = answer.toString();
 
-		if(ans.length() <= 4300){
-			out.write(ans);
+		if(n < 14285){
+			BigInteger answer = pow(n);
+			out.write(answer.toString());
 			out.flush();
 			out.close();
 		}
