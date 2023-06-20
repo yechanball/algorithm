@@ -57,10 +57,11 @@ public class Main_1647_도시분할계획 {
 		long minSum = 0;
 		int cnt = 0;
 		for(Edge edge : edgeList) {
+			if(cnt == N-2) break;
+			
 			if(union(edge.from, edge.to)) {
 				minSum += edge.weight;
 				cnt++;
-				if(cnt == N-2) break;
 			}
 		}
 		
