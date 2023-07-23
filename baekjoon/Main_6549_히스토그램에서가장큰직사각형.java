@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main_6549_히스토그램에서가장큰직사각형 {
-	static int n;
 	static long[] h;
 	
 	public static void main(String[] args) throws IOException {
